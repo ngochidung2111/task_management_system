@@ -1,24 +1,24 @@
 package com.taskmanager.app.Response;
 
 public class ApiResponse<T> {
-    private String status;
+    private Integer status;
     private String message;
     private T data;
     public ApiResponse(){
 
     }
-    public ApiResponse(String status, String message, T data) {
+    public ApiResponse(Integer status, String message, T data) {
         this.status = status;
         this.message = message;
         this.data = data;
     }
 
     // Getters and Setters
-    public String getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

@@ -21,6 +21,6 @@ public class TaskLogController {
     @GetMapping("")
     public ApiResponse<List<TaskLog>> getAllTaskLog(){
         List<TaskLog> taskLogs = taskLogService.getAllTaskLog();
-        return new ApiResponse<>("success", "success", taskLogs);
+        return new ApiResponse<>(200, "success", taskLogs);
     }
 }
