@@ -2,6 +2,8 @@ package com.taskmanager.app.controller;
 
 import com.taskmanager.app.Response.ApiResponse;
 //import com.taskmanager.app.exception.MissingOrInvalidTokenException;
+import com.taskmanager.app.model.Priority;
+import com.taskmanager.app.model.Status;
 import com.taskmanager.app.model.Task;
 import com.taskmanager.app.model.User;
 import com.taskmanager.app.service.TaskService;
@@ -23,20 +25,7 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
-    @GetMapping("")
-    public ApiResponse<List<Task>> getAllTasks(){
-        List<Task> tasks = taskService.getAllTasks();
-        return new ApiResponse<>(200,"success",tasks);
-    }
-    @GetMapping("/user/{userId}")
-    public ApiResponse<List<Task>> getTasksByUserId(@PathVariable Long userId) {
-        List<Task> tasks = taskService.getTasksByUserId(userId);
-        if (!tasks.isEmpty()) {
-            return new ApiResponse<>(200, "Tasks retrieved successfully", tasks);
-        } else {
-            return new ApiResponse<>(200, "No tasks found for the user", null);
-        }
-    }
+
     @GetMapping("/tasks")
     public ApiResponse<List<Task>> getMyTasks(Authentication auth) {
 
@@ -62,5 +51,36 @@ public class TaskController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Không thể tạo entity, vui lòng kiểm tra lại dữ liệu.");
         }
+    }
+    @PatchMapping("/{taskId}/status")
+    public ApiResponse<Task> updateStatus(
+            @PathVariable Long taskId,
+            @RequestBody Map<String, String> body,
+            Authentication auth
+    ) {
+        // parse the new status from JSON: { "status": "IN_PROGRESS" }
+        Status newStatus = Status.valueOf(body.get("status"));
+        Long userId    = (Long) auth.getDetails();
+
+        Task updated = taskService.updateTaskStatus(taskId, newStatus, userId);
+        return new ApiResponse<>(200, "Status updated fam", updated);
+    }
+    @PatchMapping("/{taskId}/priority")
+    public ApiResponse<Task> updatePriority(
+            @PathVariable Long taskId,
+            @RequestBody Map<String, String> body,
+            Authentication auth
+    ) {
+        // Expect JSON: { "priority": "HIGH" }
+        Priority newPriority = Priority.valueOf(body.get("priority"));
+        Long userId = (Long) auth.getDetails();
+
+        Task updated = taskService.updateTaskPriority(taskId, newPriority, userId);
+        return new ApiResponse<>(200, "Priority updated!", updated);
+    }
+    @PostMapping("/tasks/extend-due-date")
+    public String extendTaskDueDate(@RequestParam Long taskId) {
+        taskService.extendTaskDueDate(taskId);
+        return "Due date extended by 1 hour.";
     }
 }

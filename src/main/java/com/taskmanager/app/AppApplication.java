@@ -7,9 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @SpringBootApplication
+@EnableScheduling
 public class AppApplication implements CommandLineRunner {
 
 	@Autowired
@@ -17,6 +22,7 @@ public class AppApplication implements CommandLineRunner {
 
 	public static void main(String[] args) {
 		SpringApplication.run(AppApplication.class, args);
+
 	}
 
 	public void run(String... args){

@@ -37,7 +37,16 @@ public class Task {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;  // Thời gian cập nhật công việc
+    @Column(name = "notified", nullable = false)
+    private boolean notified = false;  // Trạng thái đã gửi thông báo chưa
 
+    public boolean isNotified() {
+        return notified;
+    }
+
+    public void setNotified(boolean notified) {
+        this.notified = notified;
+    }
 
     // Constructor
     public Task() {}
