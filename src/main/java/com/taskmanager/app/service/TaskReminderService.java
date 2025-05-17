@@ -63,7 +63,7 @@ public class TaskReminderService {
         for (Task task : tasks) {
             // Nếu công việc còn lại ít hơn 1 giờ để đến hạn
             if (task.getDueDate().isBefore(LocalDateTime.now().plusHours(1))) {
-
+                System.out.println(task.getDueDate());
                 // Gửi email nhắc nhở
                 String emailMessage = buildEmailMessage(task);
                 emailNotificationService.sendReminderEmail(task.getUser().getEmail(), "Nhắc nhở công việc", emailMessage);

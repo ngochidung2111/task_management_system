@@ -35,7 +35,7 @@ public class TaskService {
             task.setUser(user);
             task.setCreatedAt(LocalDateTime.now());
             task.setUpdatedAt(LocalDateTime.now());
-
+            System.out.println("DUEDATE"+task.getDueDate());
             // Save the task to the database
             return taskRepository.save(task);
         } else {

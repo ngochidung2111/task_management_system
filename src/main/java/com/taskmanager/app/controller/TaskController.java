@@ -2,6 +2,7 @@ package com.taskmanager.app.controller;
 
 import com.taskmanager.app.Response.ApiResponse;
 //import com.taskmanager.app.exception.MissingOrInvalidTokenException;
+import com.taskmanager.app.dto.StatusUpdateRequest;
 import com.taskmanager.app.model.Priority;
 import com.taskmanager.app.model.Status;
 import com.taskmanager.app.model.Task;
@@ -20,7 +21,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/task")
-@CrossOrigin(origins = "http://localhost:5173")
 public class TaskController {
     @Autowired
     private TaskService taskService;
@@ -55,14 +55,14 @@ public class TaskController {
     @PatchMapping("/{taskId}/status")
     public ApiResponse<Task> updateStatus(
             @PathVariable Long taskId,
-            @RequestBody Map<String, String> body,
+            @RequestBody StatusUpdateRequest body,
             Authentication auth
     ) {
         // parse the new status from JSON: { "status": "IN_PROGRESS" }
-        Status newStatus = Status.valueOf(body.get("status"));
+
         Long userId    = (Long) auth.getDetails();
 
-        Task updated = taskService.updateTaskStatus(taskId, newStatus, userId);
+        Task updated = taskService.updateTaskStatus(taskId, body.getStatus(), userId);
         return new ApiResponse<>(200, "Status updated fam", updated);
     }
     @PatchMapping("/{taskId}/priority")

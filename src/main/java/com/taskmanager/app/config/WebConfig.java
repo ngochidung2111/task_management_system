@@ -13,7 +13,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // Áp dụng CORS cho tất cả các API
                 .allowedOrigins("http://localhost:5173") // Cho phép yêu cầu từ frontend
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Các phương thức HTTP cho phép
+                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS") // Các phương thức HTTP cho phép
                 .allowedHeaders("Authorization", "Content-Type", "Accept") // Các header cho phép
                 .allowCredentials(true) // Cho phép cookies và thông tin xác thực
                 .maxAge(3600); // Thời gian lưu cache cho preflight request (3600 giây = 1 giờ)
