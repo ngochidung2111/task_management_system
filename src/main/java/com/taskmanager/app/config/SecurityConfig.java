@@ -98,7 +98,7 @@ public class SecurityConfig  {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));  // Thêm domain frontend của bạn ở đây
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173","https://task-management-system-fe-xqh9.vercel.app/"));  // Thêm domain frontend của bạn ở đây
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);  // Cho phép xác thực (cookies, Authorization header, etc.)
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT","PATCH", "DELETE", "OPTIONS"));

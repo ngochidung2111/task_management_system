@@ -12,7 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // Áp dụng CORS cho tất cả các API
-                .allowedOrigins("http://localhost:5173") // Cho phép yêu cầu từ frontend
+                .allowedOrigins("http://localhost:5173","https://task-management-system-fe-xqh9.vercel.app/") // Cho phép yêu cầu từ frontend
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS") // Các phương thức HTTP cho phép
                 .allowedHeaders("Authorization", "Content-Type", "Accept") // Các header cho phép
                 .allowCredentials(true) // Cho phép cookies và thông tin xác thực
