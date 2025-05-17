@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.TimeZone;
 
 @SpringBootApplication
 @EnableScheduling
@@ -21,6 +22,7 @@ public class AppApplication implements CommandLineRunner {
 	private UserRepository userRepository;
 
 	public static void main(String[] args) {
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
 		SpringApplication.run(AppApplication.class, args);
 
 	}
