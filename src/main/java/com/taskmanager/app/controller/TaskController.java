@@ -3,10 +3,9 @@ package com.taskmanager.app.controller;
 import com.taskmanager.app.Response.ApiResponse;
 //import com.taskmanager.app.exception.MissingOrInvalidTokenException;
 import com.taskmanager.app.dto.StatusUpdateRequest;
-import com.taskmanager.app.model.Priority;
-import com.taskmanager.app.model.Status;
-import com.taskmanager.app.model.Task;
-import com.taskmanager.app.model.User;
+import com.taskmanager.app.dto.TaskResponse;
+import com.taskmanager.app.model.*;
+import com.taskmanager.app.service.TaskLogService;
 import com.taskmanager.app.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,25 +13,30 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/task")
 public class TaskController {
     @Autowired
     private TaskService taskService;
-
+    @Autowired
+    private TaskLogService taskLogService;
 
     @GetMapping("/tasks")
-    public ApiResponse<List<Task>> getMyTasks(Authentication auth) {
+    public ApiResponse<List<TaskResponse>> getMyTasks(Authentication auth) {
 
         Long myId = (Long) auth.getDetails();
         List<Task> tasks = taskService.getTasksByUserId(myId);
+        List<TaskResponse> taskResponses = new ArrayList<>();
+        for(Task task : tasks){
+            List<TaskLog> taskLogs = taskLogService.getAllTaskLogByTaskId(task.getId(),myId);
+            TaskResponse taskResponse = new TaskResponse(task, taskLogs);
+            taskResponses.add(taskResponse);
 
-        return new ApiResponse<>(200, "Tasks retrieved successfully", tasks);
+        }
+
+        return new ApiResponse<>(200, "Tasks retrieved successfully", taskResponses);
     }
     @PostMapping("/task")
     public ResponseEntity<Object> createTask(@RequestBody Task task, Authentication authentication) {
@@ -83,4 +87,10 @@ public class TaskController {
         taskService.extendTaskDueDate(taskId);
         return "Due date extended by 1 hour.";
     }
+    @DeleteMapping("/{taskId}")
+    public ApiResponse<String> deletetask(@PathVariable Long taskId, Authentication auth){
+        Long userId = (Long) auth.getDetails();
+        taskService.deleteTask(taskId,userId);
+        return new ApiResponse<>(200, "success","deleted Task");
+     }
 }

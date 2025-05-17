@@ -1,11 +1,10 @@
 package com.taskmanager.app.service;
 
-import com.taskmanager.app.model.Priority;
-import com.taskmanager.app.model.Status;
-import com.taskmanager.app.model.Task;
-import com.taskmanager.app.model.User;
+import com.taskmanager.app.model.*;
+import com.taskmanager.app.repository.TaskLogRepository;
 import com.taskmanager.app.repository.TaskRepository;
 import com.taskmanager.app.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -19,6 +18,8 @@ public class TaskService {
     private TaskRepository taskRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private TaskLogRepository taskLogRepository;
     public List<Task> getAllTasks(){
         return taskRepository.findAll();
     }
@@ -26,7 +27,10 @@ public class TaskService {
     public List<Task> getTasksByUserId(Long userId) {
         return taskRepository.findByUserId(userId);
     }
-
+    public Task getTaskById(Long taskId){
+        return taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+    }
     public Task createTask(Task task, Long userId) {
         // Find user by userId and set it for the task
         User user = userRepository.findById(userId).orElse(null);
@@ -55,6 +59,16 @@ public class TaskService {
         task.setStatus(newStatus);
         task.setUpdatedAt(LocalDateTime.now());
         return taskRepository.save(task);
+    }
+    @Transactional
+    public void deleteTask(Long taskId, Long userId){
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+        if (!task.getUser().getId().equals(userId)) {
+            throw new AccessDeniedException("not your task");
+        }
+        taskLogRepository.deleteByTaskId(taskId);
+        taskRepository.deleteById(taskId);
     }
     public Task updateTaskPriority(Long taskId, Priority newPriority, Long userId) {
         Task task = taskRepository.findById(taskId)

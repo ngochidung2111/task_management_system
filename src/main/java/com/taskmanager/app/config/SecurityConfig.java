@@ -60,6 +60,7 @@ public class SecurityConfig  {
                                 "/swagger-resources/**",
                                 "/webjars/**").permitAll()
                         .requestMatchers("/api/v1/task/**").hasAnyAuthority(Role.USER.name())
+                        .requestMatchers("/api/v1/tasklog/**").hasAnyAuthority(Role.USER.name())
                         .requestMatchers("/api/admin").hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers("/api/v1/user/profile").hasAnyAuthority(Role.ADMIN.name(), Role.USER.name())
                 )
