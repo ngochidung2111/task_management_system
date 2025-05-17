@@ -100,7 +100,7 @@ public class SecurityConfig  {
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));  // Thêm domain frontend của bạn ở đây
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);  // Cho phép xác thực (cookies, Authorization header, etc.)
-
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT","PATCH", "DELETE", "OPTIONS"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
