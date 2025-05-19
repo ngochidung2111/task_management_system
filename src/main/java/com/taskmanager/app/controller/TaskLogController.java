@@ -49,12 +49,22 @@ public class TaskLogController {
         return new ApiResponse<>(200, "success", taskLogResponses);
     }
     @PostMapping("/{taskId}")
-    public ApiResponse<TaskLogRequest> createTaskLog(@PathVariable Long taskId, @RequestBody TaskLogRequest taskLogRequest, Authentication authentication) {
+    public ApiResponse<TaskLogResponse> createTaskLog(@PathVariable Long taskId, @RequestBody TaskLogRequest taskLogRequest, Authentication authentication) {
         Task task = taskService.getTaskById(taskId);
         User user = userService.getUserById((Long) authentication.getDetails());
 
         TaskLog taskLog = taskLogService.createTaskLog(task, taskLogRequest.getStatus(), taskLogRequest.getComment(), user);
-
-        return new ApiResponse<>(200, "success", taskLogRequest);
+        TaskLogResponse taskLogResponse = new TaskLogResponse();
+        taskLogResponse.setId(taskLog.getId());
+        taskLogResponse.setUpdateAt(taskLog.getUpdatedAt());
+        taskLogResponse.setComment(taskLogRequest.getComment());
+        taskLogResponse.setStatus(taskLogRequest.getStatus());
+        return new ApiResponse<>(200, "success", taskLogResponse);
+    }
+    @DeleteMapping("/{taskLogId}")
+    public ApiResponse<String> deleteTaskLog(@PathVariable Long taskLogId, Authentication authentication){
+        Long userId = (Long) authentication.getDetails();
+        taskLogService.deleteTaskLogById(taskLogId,userId);
+        return new ApiResponse<>(200, "success", "delete task log id:" + taskLogId);
     }
 }

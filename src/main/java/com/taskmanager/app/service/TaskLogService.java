@@ -46,4 +46,12 @@ public class TaskLogService {
         }
         return taskLogRepository.save(taskLog);
     }
+    public void deleteTaskLogById(Long taskLogId, Long userId){
+        TaskLog taskLog = taskLogRepository.findById(taskLogId)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+        if (!taskLog.getTask().getUser().getId().equals(userId)) {
+            throw new AccessDeniedException("not your task");
+        }
+        taskRepository.deleteById(taskLogId);
+    }
 }
