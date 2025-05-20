@@ -26,3 +26,4 @@
 - **JavaMailSender**: Gửi email thông báo nhắc nhở cho người dùng.
 - **MySQL**: Cơ sở dữ liệu lưu trữ thông tin công việc và người dùng.
 
+## Link demo: https://task-management-system-fe-xqh9.vercel.app/
